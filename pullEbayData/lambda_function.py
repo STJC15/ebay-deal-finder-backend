@@ -54,7 +54,6 @@ def lambda_handler(event, context):
     # client = MongoClient(uri)
     # db = client["MyDataBase"]
     # collection = db["EbayData"]
-    # print(event)
     oauth_token = get_token()
     ebay_api_endpoint = "https://api.ebay.com/buy/browse/v1/item_summary/search"
     search_query = event["queryStringParameters"]["search_query"]
@@ -66,10 +65,12 @@ def lambda_handler(event, context):
               }
     headers = {"Authorization": f"Bearer {oauth_token}"}
     response = requests.get(ebay_api_endpoint, headers=headers, params = params)
+    print(event)
     discount_items = []
+    # allow_origins = ['http://localhost:3000', 'https://ebay-deal-finder.netlify.app']s
     cors_headers = {
-                "Access-Control-Allow-Origin": 'http://localhost:3000',
-                "Access-Control-Allow-Methods": "GET, POST, PUT,DELETE, OPTIONS",
+                "Access-Control-Allow-Origin":'*',
+                "Access-Control-Allow-Methods": "GET",
                 "Access-Control-Allow-Headers": "Content-Type"
     }
     if response.status_code == 200:
