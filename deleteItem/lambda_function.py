@@ -40,12 +40,11 @@ def lambda_handler(event, context):
         uid = decoded_token['uid']
         body = json.loads(event['body'])
         itemId = body["item_id"]
-        # collection.update_one({"userId":uid}, {"$set": {"userId":uid,"itemId":itemId}}, upsert=True)
-        collection.insert_one({"userId":uid,"itemId":itemId})
+        collection.delete_one({"userId":uid,"itemId":itemId})
         return{
             "statusCode":200,
             "headers":cors_headers,
-        "body": json.dumps({"message":"Item successfully created"})
+        "body": json.dumps({"message":"Item successfully deleted"})
         }
     else:
         return {
