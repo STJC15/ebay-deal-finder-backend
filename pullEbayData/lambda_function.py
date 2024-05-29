@@ -65,7 +65,6 @@ def lambda_handler(event, context):
               }
     headers = {"Authorization": f"Bearer {oauth_token}"}
     response = requests.get(ebay_api_endpoint, headers=headers, params = params)
-    print(event)
     discount_items = []
     # allow_origins = ['http://localhost:3000', 'https://ebay-deal-finder.netlify.app']s
     cors_headers = {
@@ -82,10 +81,6 @@ def lambda_handler(event, context):
 
         if("itemSummaries" in data):
             discount_items = [item for item in data["itemSummaries"] if "marketingPrice" in item]
-            for item in data["itemSummaries"]:
-                if("image" not in item and "thumbnailImages" not in item):
-                    if("additionalImages" not in item):
-                        print(item)
         else:
             return{
                 "statusCode":"200",

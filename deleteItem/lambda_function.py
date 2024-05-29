@@ -25,7 +25,7 @@ def lambda_handler(event, context):
     # id_token = event['headers']['id_token']
     cors_headers = {
                 "Access-Control-Allow-Origin":'*',
-                "Access-Control-Allow-Methods": "POST",
+                "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, DELETE",
                 "Access-Control-Allow-Headers": "Content-Type"
     }
     firebase_secret = get_firebase_secret()
@@ -33,14 +33,23 @@ def lambda_handler(event, context):
     if(not firebase_admin._apps):
         cred = credentials.Certificate(firebase_secret)
         firebase_admin.initialize_app(cred)
+    print(event)
     auth_header = event['headers']['Authorization']
     if(auth_header.split(" ")[0] == "Bearer"):
         id_token = auth_header[7:]
         decoded_token = auth.verify_id_token(id_token)
         uid = decoded_token['uid']
         body = json.loads(event['body'])
-        itemId = body["item_id"]
-        collection.delete_one({"userId":uid,"itemId":itemId})
+        collection.delete_one({"userId":uid,
+                               "itemId":body["itemId"],
+                               "imageUrl":body["imageUrl"],
+                               "title":body["title"],
+                               "new_price":body["new_price"],
+                               "old_price":body["old_price"],
+                               "discount_price":body["discount_price"],
+                               "shipping_cost":body["shipping_cost"],
+                               "coupons":body["coupons"]
+                               })
         return{
             "statusCode":200,
             "headers":cors_headers,

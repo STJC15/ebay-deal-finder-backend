@@ -39,9 +39,16 @@ def lambda_handler(event, context):
         decoded_token = auth.verify_id_token(id_token)
         uid = decoded_token['uid']
         body = json.loads(event['body'])
-        itemId = body["item_id"]
-        # collection.update_one({"userId":uid}, {"$set": {"userId":uid,"itemId":itemId}}, upsert=True)
-        collection.insert_one({"userId":uid,"itemId":itemId})
+        collection.insert_one({"userId":uid,
+                               "itemId":body["itemId"],
+                               "imageUrl":body["imageUrl"],
+                               "title":body["title"],
+                               "new_price":body["new_price"],
+                               "old_price":body["old_price"],
+                               "discount_price":body["discount_price"],
+                               "shipping_cost":body["shipping_cost"],
+                               "coupons":body["coupons"]
+                               })
         return{
             "statusCode":200,
             "headers":cors_headers,
