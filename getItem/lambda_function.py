@@ -19,7 +19,7 @@ def get_firebase_secret():
 
 def lambda_handler(event, context):
     # Connect to mongodb
-    uri = "mongodb+srv://situjiachang:sGpDBMUDwntLjyfV@cluster0.yicme3k.mongodb.net/"
+    uri = os.environ['mongouri']
     client = MongoClient(uri)
     db = client["MyDataBase"]
     collection = db["UserData"]

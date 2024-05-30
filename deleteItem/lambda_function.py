@@ -18,7 +18,7 @@ def get_firebase_secret():
     return json.loads(response["Parameter"]["Value"])
 def lambda_handler(event, context):
     # Connect to mongodb
-    uri = "mongodb+srv://situjiachang:sGpDBMUDwntLjyfV@cluster0.yicme3k.mongodb.net/"
+    uri = os.environ['mongouri']
     client = MongoClient(uri)
     db = client["MyDataBase"]
     collection = db["UserData"]
@@ -48,7 +48,9 @@ def lambda_handler(event, context):
                                "old_price":body["old_price"],
                                "discount_price":body["discount_price"],
                                "shipping_cost":body["shipping_cost"],
-                               "coupons":body["coupons"]
+                               "coupons":body["coupons"],
+                               "itemUrl":body["itemUrl"],
+                               "discount_percent":body["discount_percent"]
                                })
         return{
             "statusCode":200,
